@@ -17,7 +17,7 @@ body{
   color:#222;
 }
 
-/* ===== 星空粒子 ===== */
+/* ===== canvas 通用 ===== */
 canvas{
   position:fixed;
   inset:0;
@@ -57,21 +57,15 @@ h1{
   font-size:17px;
   line-height:1.9;
 }
-
 .content p{
   margin:20px 0;
   opacity:0;
   transform:translateY(24px);
   animation:fadeUp 1.2s ease forwards;
 }
-.content p:nth-child(n){
-  animation-delay:.4s;
-}
-
 @keyframes fadeUp{
   to{opacity:1;transform:none}
 }
-
 .content img{
   width:100%;
   border-radius:18px;
@@ -79,7 +73,7 @@ h1{
   box-shadow:0 20px 40px rgba(0,0,0,.12);
 }
 
-/* ===== 爱心 ===== */
+/* ===== 点击爱心 ===== */
 .heart{
   text-align:center;
   font-size:64px;
@@ -93,7 +87,6 @@ h1{
   50%{transform:scale(1.18)}
   100%{transform:scale(1)}
 }
-
 .tip{
   text-align:center;
   font-size:13px;
@@ -109,13 +102,11 @@ h1{
   opacity:0;
   transform:translateY(60px);
   transition:1.8s cubic-bezier(.22,.61,.36,1);
-  font-size:18px;
 }
 #final.show{
   opacity:1;
   transform:none;
 }
-
 #final p{
   font-size:20px;
   line-height:2;
@@ -128,6 +119,8 @@ h1{
 
 <!-- 星空 -->
 <canvas id="stars"></canvas>
+<!-- 爱心粒子 -->
+<canvas id="hearts"></canvas>
 
 <div class="wrapper">
 
@@ -179,52 +172,88 @@ function playMusic(){
     m.volume=Math.min(v,0.5);
     if(v>=0.5)clearInterval(fade);
   },120);
-  if(navigator.vibrate) navigator.vibrate([60,30,60]);
+  navigator.vibrate && navigator.vibrate([60,30,60]);
 }
 
-/* ===== 滚到底显示最终告白 ===== */
-window.addEventListener("scroll",()=>{
+/* ===== 滚动显示告白 ===== */
+addEventListener("scroll",()=>{
   const f=document.getElementById("final");
-  if(window.scrollY+innerHeight>
-    document.body.scrollHeight-140){
+  if(scrollY+innerHeight>document.body.scrollHeight-140){
     f.classList.add("show");
-    if(navigator.vibrate) navigator.vibrate([120,60,120]);
+    navigator.vibrate && navigator.vibrate([120,60,120]);
   }
 });
 
-/* ===== 星空粒子 ===== */
-const c=document.getElementById("stars"),
-ctx=c.getContext("2d");
-let w,h,stars=[];
+/* ===== 星空 ===== */
+const sc=document.getElementById("stars"), sctx=sc.getContext("2d");
+let sw,sh,stars=[];
 function resize(){
-  w=c.width=innerWidth;
-  h=c.height=innerHeight;
+  sw=sc.width=innerWidth;
+  sh=sc.height=innerHeight;
 }
-resize();
-addEventListener("resize",resize);
-
+resize(); addEventListener("resize",resize);
 for(let i=0;i<160;i++){
-  stars.push({
-    x:Math.random()*w,
-    y:Math.random()*h,
-    r:Math.random()*1.6+.4,
-    s:Math.random()*.5+.15,
-    o:Math.random()*.5+.3
-  });
+  stars.push({x:Math.random()*sw,y:Math.random()*sh,r:Math.random()*1.6+.4,s:Math.random()*.5+.15,o:Math.random()*.5+.3});
 }
-function draw(){
-  ctx.clearRect(0,0,w,h);
+function drawStars(){
+  sctx.clearRect(0,0,sw,sh);
   stars.forEach(s=>{
-    ctx.beginPath();
-    ctx.fillStyle=`rgba(120,150,255,${s.o})`;
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fill();
+    sctx.fillStyle=`rgba(120,150,255,${s.o})`;
+    sctx.beginPath();
+    sctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    sctx.fill();
     s.y+=s.s;
-    if(s.y>h){s.y=0;s.x=Math.random()*w}
+    if(s.y>sh){s.y=0;s.x=Math.random()*sw}
   });
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawStars);
 }
-draw();
+drawStars();
+
+/* ===== 爱心粒子 ===== */
+const hc=document.getElementById("hearts"), hctx=hc.getContext("2d");
+let hw,hh,hearts=[];
+function resizeH(){
+  hw=hc.width=innerWidth;
+  hh=hc.height=innerHeight;
+}
+resizeH(); addEventListener("resize",resizeH);
+
+function newHeart(){
+  return{
+    x:Math.random()*hw,
+    y:hh+20,
+    s:8+Math.random()*14,
+    v:0.6+Math.random()*1.2,
+    d:(Math.random()-.5)*0.6,
+    a:.4+Math.random()*.6
+  }
+}
+for(let i=0;i<36;i++)hearts.push(newHeart());
+
+function drawHeart(x,y,s,a){
+  hctx.save();
+  hctx.translate(x,y);
+  hctx.scale(s/20,s/20);
+  hctx.beginPath();
+  hctx.moveTo(0,0);
+  hctx.bezierCurveTo(0,-3,-5,-3,-5,0);
+  hctx.bezierCurveTo(-5,3,0,6,0,9);
+  hctx.bezierCurveTo(0,6,5,3,5,0);
+  hctx.bezierCurveTo(5,-3,0,-3,0,0);
+  hctx.fillStyle=`rgba(255,105,180,${a})`;
+  hctx.fill();
+  hctx.restore();
+}
+function drawHearts(){
+  hctx.clearRect(0,0,hw,hh);
+  hearts.forEach((p,i)=>{
+    p.y-=p.v; p.x+=p.d;
+    drawHeart(p.x,p.y,p.s,p.a);
+    if(p.y<-20)hearts[i]=newHeart();
+  });
+  requestAnimationFrame(drawHearts);
+}
+drawHearts();
 </script>
 
 </body>
