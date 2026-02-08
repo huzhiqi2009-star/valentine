@@ -6,152 +6,225 @@
 <title>情人节惊喜</title>
 
 <style>
-body {
-  margin: 0;
-  min-height: 300vh;
-  background: white;
-  overflow-y: auto;
-  font-family: "PingFang SC", sans-serif;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#f7f8fa;
+  font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+  min-height:320vh;
+  overflow-x:hidden;
+  color:#222;
 }
 
-/* 标题电影登场 */
-h1 {
-  font-size: 40px;
-  text-align: center;
-  margin: 80px 0 40px;
-  opacity: 0;
-  transform: translateY(60px) scale(0.9);
-  animation: epicIn 2s ease-out forwards;
+/* ===== 星空粒子 ===== */
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
 }
 
-@keyframes epicIn {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+/* ===== 主容器 ===== */
+.wrapper{
+  position:relative;
+  z-index:1;
+  max-width:820px;
+  margin:60px auto 120px;
+  padding:56px 28px 100px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  border-radius:26px;
+  box-shadow:0 30px 80px rgba(0,0,0,.08);
 }
 
-p {
-  max-width: 720px;
-  margin: 18px auto;
-  padding: 0 24px;
-  font-size: 17px;
-  line-height: 1.9;
+/* ===== 标题 ===== */
+h1{
+  text-align:center;
+  font-size:40px;
+  margin:0 0 46px;
+  letter-spacing:2px;
+  opacity:0;
+  transform:translateY(50px);
+  animation:titleIn 1.8s ease forwards;
+}
+@keyframes titleIn{
+  to{opacity:1;transform:none}
 }
 
-/* 图片 */
-img {
-  display: block;
-  width: 90%;
-  max-width: 360px;
-  margin: 30px auto;
-  border-radius: 14px;
-  animation: fadeIn 2s ease;
+/* ===== 内容 ===== */
+.content{
+  font-size:17px;
+  line-height:1.9;
 }
 
-/* 主爱心 */
-.heart {
-  font-size: 56px;
-  text-align: center;
-  cursor: pointer;
-  animation: pulse 1.5s infinite;
+.content p{
+  margin:20px 0;
+  opacity:0;
+  transform:translateY(24px);
+  animation:fadeUp 1.2s ease forwards;
+}
+.content p:nth-child(n){
+  animation-delay:.4s;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+@keyframes fadeUp{
+  to{opacity:1;transform:none}
 }
 
-/* 自动漂浮爱心 */
-@keyframes floatUp {
-  from { transform: translateY(120vh); opacity: 0; }
-  to { transform: translateY(-120vh); opacity: 1; }
+.content img{
+  width:100%;
+  border-radius:18px;
+  margin:34px 0;
+  box-shadow:0 20px 40px rgba(0,0,0,.12);
 }
 
-.fade {
-  animation: fadeIn 2s ease;
+/* ===== 爱心 ===== */
+.heart{
+  text-align:center;
+  font-size:64px;
+  cursor:pointer;
+  animation:beat 1.4s infinite;
+  margin-bottom:6px;
+  user-select:none;
+}
+@keyframes beat{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.18)}
+  100%{transform:scale(1)}
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.tip{
+  text-align:center;
+  font-size:13px;
+  color:#666;
+  margin-bottom:36px;
+}
+
+/* ===== 最终告白 ===== */
+#final{
+  margin-top:160px;
+  padding-top:60px;
+  text-align:center;
+  opacity:0;
+  transform:translateY(60px);
+  transition:1.8s cubic-bezier(.22,.61,.36,1);
+  font-size:18px;
+}
+#final.show{
+  opacity:1;
+  transform:none;
+}
+
+#final p{
+  font-size:20px;
+  line-height:2;
+  letter-spacing:1px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- 星空 -->
+<canvas id="stars"></canvas>
+
+<div class="wrapper">
+
 <h1>亲爱的 薛雯心</h1>
 
 <div class="heart" onclick="playMusic()">❤️</div>
-<p style="text-align:center;font-size:14px;">（点一下爱心播放音乐）</p>
+<div class="tip">（点一下爱心）</div>
 
+<div class="content">
 <p>当时的我以为我再也没有了爱情，直到我遇到了你。</p>
 <p>在星辰的呢喃中，我找到了你的影子，如月光般温柔。</p>
 <p>你是我诗篇中最美的韵脚。</p>
 <p>你的笑容点亮了我所有的黎明与黄昏。</p>
-<p>很幸运能碰到你，即使会有矛盾，也会慢慢化开。</p>
+<p>很幸运能遇到你，即使有矛盾，也会慢慢化开。</p>
 
 <img src="a.jpg">
 
 <p>有时希望世界上就只剩我和你。</p>
 
 <img src="b.jpg">
-
 <img src="c.jpg">
-  
-<p>哈哈，这是那次的照片，虽然模糊，但那份开心我永远记得 你呆呆的样子真可爱
-  
+
+<p>哈哈，这是那次的照片，虽然模糊，但那份开心我永远记得。</p>
+
+<div id="final">
+<p>
+永远爱你<br>
+胡智祈
 </p>
+</div>
+</div>
 
-<p style="text-align:center;margin-top:60px;">永远爱你，<br>胡智祈</p>
+</div>
 
-<!-- 🎵 音乐 -->
+<!-- 音乐 -->
 <audio id="bgm" loop>
-  <source src="https://m701.music.126.net/20260208133736/4ff4bd0de2221040e45f753b5475f084/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/61133642103/dc0f/e8d6/dd47/733717efaa6ff235d52a0154f8d5c595.mp3">
+<source src="https://m701.music.126.net/20260208133736/4ff4bd0de2221040e45f753b5475f084/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/61133642103/dc0f/e8d6/dd47/733717efaa6ff235d52a0154f8d5c595.mp3">
 </audio>
 
 <script>
-// 音乐播放
-function playMusic() {
-  const m = document.getElementById("bgm");
-  m.volume = 0.5;
+/* ===== 音乐渐入 + 震动 ===== */
+function playMusic(){
+  const m=document.getElementById("bgm");
+  m.volume=0;
   m.play();
+  let v=0;
+  const fade=setInterval(()=>{
+    v+=0.02;
+    m.volume=Math.min(v,0.5);
+    if(v>=0.5)clearInterval(fade);
+  },120);
+  if(navigator.vibrate) navigator.vibrate([60,30,60]);
 }
 
-// 自动生成漂浮爱心
-for (let i = 0; i < 25; i++) {
-  const h = document.createElement("div");
-  h.innerHTML = "❤️";
-  h.style.position = "fixed";
-  h.style.left = Math.random() * 100 + "vw";
-  h.style.fontSize = 20 + Math.random() * 20 + "px";
-  h.style.opacity = Math.random();
-  h.style.animation = `floatUp ${6 + Math.random()*6}s linear infinite`;
-  document.body.appendChild(h);
-}
-
-// 点击爆炸
-document.addEventListener("click", e => {
-  for (let i = 0; i < 16; i++) {
-    const s = document.createElement("div");
-    s.innerHTML = "💖";
-    s.style.position = "fixed";
-    s.style.left = e.clientX + "px";
-    s.style.top = e.clientY + "px";
-    s.style.transition = "1s";
-    document.body.appendChild(s);
-
-    setTimeout(() => {
-      s.style.left = e.clientX + (Math.random()*200-100) + "px";
-      s.style.top = e.clientY + (Math.random()*200-100) + "px";
-      s.style.opacity = 0;
-    }, 10);
-
-    setTimeout(() => s.remove(), 1000);
+/* ===== 滚到底显示最终告白 ===== */
+window.addEventListener("scroll",()=>{
+  const f=document.getElementById("final");
+  if(window.scrollY+innerHeight>
+    document.body.scrollHeight-140){
+    f.classList.add("show");
+    if(navigator.vibrate) navigator.vibrate([120,60,120]);
   }
 });
+
+/* ===== 星空粒子 ===== */
+const c=document.getElementById("stars"),
+ctx=c.getContext("2d");
+let w,h,stars=[];
+function resize(){
+  w=c.width=innerWidth;
+  h=c.height=innerHeight;
+}
+resize();
+addEventListener("resize",resize);
+
+for(let i=0;i<160;i++){
+  stars.push({
+    x:Math.random()*w,
+    y:Math.random()*h,
+    r:Math.random()*1.6+.4,
+    s:Math.random()*.5+.15,
+    o:Math.random()*.5+.3
+  });
+}
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.fillStyle=`rgba(120,150,255,${s.o})`;
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+    s.y+=s.s;
+    if(s.y>h){s.y=0;s.x=Math.random()*w}
+  });
+  requestAnimationFrame(draw);
+}
+draw();
 </script>
 
 </body>
