@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情人节惊喜</title>
+
+<style>
+body {
+  margin: 0;
+  min-height: 300vh;
+  background: white;
+  overflow-y: auto;
+  font-family: "PingFang SC", sans-serif;
+}
+
+/* 标题电影登场 */
+h1 {
+  font-size: 40px;
+  text-align: center;
+  margin: 80px 0 40px;
+  opacity: 0;
+  transform: translateY(60px) scale(0.9);
+  animation: epicIn 2s ease-out forwards;
+}
+
+@keyframes epicIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+p {
+  max-width: 720px;
+  margin: 18px auto;
+  padding: 0 24px;
+  font-size: 17px;
+  line-height: 1.9;
+}
+
+/* 图片 */
+img {
+  display: block;
+  width: 90%;
+  max-width: 360px;
+  margin: 30px auto;
+  border-radius: 14px;
+  animation: fadeIn 2s ease;
+}
+
+/* 主爱心 */
+.heart {
+  font-size: 56px;
+  text-align: center;
+  cursor: pointer;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* 自动漂浮爱心 */
+@keyframes floatUp {
+  from { transform: translateY(120vh); opacity: 0; }
+  to { transform: translateY(-120vh); opacity: 1; }
+}
+
+.fade {
+  animation: fadeIn 2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<h1>亲爱的 薛雯心</h1>
+
+<div class="heart" onclick="playMusic()">❤️</div>
+<p style="text-align:center;font-size:14px;">（点一下爱心播放音乐）</p>
+
+<p>当时的我以为我再也没有了爱情，直到我遇到了你。</p>
+<p>在星辰的呢喃中，我找到了你的影子，如月光般温柔。</p>
+<p>你是我诗篇中最美的韵脚。</p>
+<p>你的笑容点亮了我所有的黎明与黄昏。</p>
+<p>很幸运能碰到你，即使会有矛盾，也会慢慢化开。</p>
+
+<img src="a.jpg">
+
+<p>有时希望世界上就只剩我和你。</p>
+
+<img src="b.jpg">
+
+<img src="c.jpg">
+  
+<p>哈哈，这是那次的照片，虽然模糊，但那份开心我永远记得 你呆呆的样子真可爱
+  
+</p>
+
+<p style="text-align:center;margin-top:60px;">永远爱你，<br>胡智祈</p>
+
+<!-- 🎵 音乐 -->
+<audio id="bgm" loop>
+  <source src="https://m701.music.126.net/20260208133736/4ff4bd0de2221040e45f753b5475f084/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/61133642103/dc0f/e8d6/dd47/733717efaa6ff235d52a0154f8d5c595.mp3">
+</audio>
+
+<script>
+// 音乐播放
+function playMusic() {
+  const m = document.getElementById("bgm");
+  m.volume = 0.5;
+  m.play();
+}
+
+// 自动生成漂浮爱心
+for (let i = 0; i < 25; i++) {
+  const h = document.createElement("div");
+  h.innerHTML = "❤️";
+  h.style.position = "fixed";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = 20 + Math.random() * 20 + "px";
+  h.style.opacity = Math.random();
+  h.style.animation = `floatUp ${6 + Math.random()*6}s linear infinite`;
+  document.body.appendChild(h);
+}
+
+// 点击爆炸
+document.addEventListener("click", e => {
+  for (let i = 0; i < 16; i++) {
+    const s = document.createElement("div");
+    s.innerHTML = "💖";
+    s.style.position = "fixed";
+    s.style.left = e.clientX + "px";
+    s.style.top = e.clientY + "px";
+    s.style.transition = "1s";
+    document.body.appendChild(s);
+
+    setTimeout(() => {
+      s.style.left = e.clientX + (Math.random()*200-100) + "px";
+      s.style.top = e.clientY + (Math.random()*200-100) + "px";
+      s.style.opacity = 0;
+    }, 10);
+
+    setTimeout(() => s.remove(), 1000);
+  }
+});
+</script>
+
+</body>
+</html>
